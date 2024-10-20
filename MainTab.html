@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Lua Script Generator for Roblox</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f9;
+            padding: 20px;
+        }
+        textarea {
+            width: 100%;
+            height: 150px;
+            margin-bottom: 10px;
+        }
+        button {
+            padding: 10px 15px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        button:disabled {
+            background-color: #ccc;
+        }
+        pre {
+            background-color: #272822;
+            color: #fff;
+            padding: 10px;
+            border-radius: 4px;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>AI Lua Script Generator for Roblox</h1>
+    <p>Describe the script you need in the textbox below (in English):</p>
+
+    <textarea id="description" placeholder="Describe what you want the Lua script to do..."></textarea><br>
+    <button id="generateBtn" onclick="generateCode()">Generate Lua Script</button>
+    <button id="copyBtn" onclick="copyCode()" disabled>Copy to Clipboard</button>
+
+    <h2>Generated Lua Script:</h2>
+    <pre id="output"></pre>
+
+    <script>
+        async function generateCode() {
+            const description = document.getElementById('description').value;
+            if (!description) {
+                alert('Please enter a description!');
+                return;
+            }
+
+            const generateBtn = document.getElementById('generateBtn');
+            const copyBtn = document.getElementById('copyBtn');
+            const output = document.getElementById('output');
+            
+            // Disable the button while processing
+            generateBtn.disabled = true;
+            output.textContent = 'Generating Lua script...';
+
+            // Simulate AI request (replace this with your actual AI call, e.g. via a backend API)
+            try {
+                const response = await fetch('/generate-lua-script', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ description: description })
+                });
+
+                const data = await response.json();
+                const luaCode = data.luaCode || 'Error: Could not generate Lua script.';
+                output.textContent = luaCode;
+
+                // Enable copy button
+                copyBtn.disabled = false;
+            } catch (error) {
+                output.textContent = 'Error generating Lua script.';
+                console.error('Error:', error);
+            } finally {
+                generateBtn.disabled = false;
+            }
+        }
+
+        function copyCode() {
+            const output = document.getElementById('output');
+            const code = output.textContent;
+
+            // Copy to clipboard
+            navigator.clipboard.writeText(code)
+                .then(() => {
+                    alert('Lua script copied to clipboard!');
+                })
+                .catch(err => {
+                    alert('Failed to copy script: ' + err);
+                });
+        }
+    </script>
+
+</body>
+</html>
